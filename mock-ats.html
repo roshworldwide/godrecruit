@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mock ATS Form</title>
+</head>
+<body>
+    <h1>Apply for Software Engineer</h1>
+    
+    <form id="job-form">
+        <div>
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" name="first_name" />
+        </div>
+        <div>
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" name="last_name" />
+        </div>
+        <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" />
+        </div>
+        <div>
+            <label for="experience">Years of Experience</label>
+            <input type="number" id="experience" name="experience" />
+        </div>
+        <div>
+            <label>Why do you want to work here?</label>
+            <textarea id="why_here" name="why_here"></textarea>
+        </div>
+        <div>
+            <label for="visa_status">Do you require a visa?</label>
+            <select id="visa_status" name="visa_status">
+                <option value=""></option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+        </div>
+        <button type="submit" id="submit_btn">Submit Application</button>
+    </form>
+    
+    <script>
+        // Track synthetic events to ensure React-bypass would work
+        document.getElementById('job-form').addEventListener('input', (e) => {
+            console.log('Input event fired on:', e.target.id, 'with value:', e.target.value);
+            e.target.setAttribute('data-event-fired', 'true');
+        });
+        document.getElementById('job-form').addEventListener('change', (e) => {
+            console.log('Change event fired on:', e.target.id, 'with value:', e.target.value);
+            e.target.setAttribute('data-event-fired', 'true');
+        });
+    </script>
+</body>
+</html>

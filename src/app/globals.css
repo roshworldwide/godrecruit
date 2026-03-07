@@ -1,26 +1,74 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f2f2f7;
+  --foreground: #1c1c1e;
+
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.05);
+
+  --blur-amount: 24px;
+  --saturate-amount: 180%;
+
+  --sf-pro-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --sf-pro-text: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #000000;
+    --foreground: #ffffff;
+    --glass-bg: rgba(28, 28, 30, 0.45);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sf-pro-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--sf-pro-display);
+  letter-spacing: -0.015em;
+  font-weight: 600;
+}
+
+/* iOS 26 Liquid Glass Utilities */
+.liquid-glass {
+  background: linear-gradient(135deg, var(--glass-bg) 0%, rgba(255, 255, 255, 0.1) 100%);
+  backdrop-filter: blur(var(--blur-amount)) saturate(var(--saturate-amount));
+  -webkit-backdrop-filter: blur(var(--blur-amount)) saturate(var(--saturate-amount));
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2), var(--glass-shadow);
+  border-radius: 20px;
+}
+
+.apple-transition {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.apple-interactive {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  user-select: none;
+}
+
+.apple-interactive:active {
+  transform: scale(0.97);
 }

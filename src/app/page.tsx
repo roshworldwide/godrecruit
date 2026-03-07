@@ -1,65 +1,87 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState, useEffect } from "react";
+import { Settings, CheckCircle2, Bot } from "lucide-react";
+
+export default function Popup() {
+  const [status, setStatus] = useState<"idle" | "parsing" | "generating" | "injecting" | "done">("idle");
+
+  const handleAutoApply = async () => {
+    setStatus("parsing");
+
+    // In a real extension, we send a message to the active tab's content script
+    if (typeof chrome !== "undefined" && chrome.tabs) {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tab.id) {
+        chrome.tabs.sendMessage(tab.id, { action: "START_AUTO_APPLY" });
+      }
+    } else {
+      // Dummy flow for local testing
+      setTimeout(() => setStatus("generating"), 1000);
+      setTimeout(() => setStatus("injecting"), 2000);
+      setTimeout(() => setStatus("done"), 3000);
+    }
+  };
+
+  const openOptions = () => {
+    if (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.openOptionsPage) {
+      chrome.runtime.openOptionsPage();
+    } else if (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.getURL) {
+      window.open(chrome.runtime.getURL('options.html'));
+    } else {
+      window.open("/options.html", "_blank");
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="w-[340px] h-[480px] p-6 relative overflow-hidden flex flex-col items-center justify-between text-center bg-transparent">
+      {/* Background gradients for liquid glass depth */}
+      <div className="absolute inset-0 z-[-1] bg-gradient-to-br from-white/40 to-white/10 dark:from-white/10 dark:to-white/5" />
+      <div className="absolute top-[-50px] left-[-50px] w-48 h-48 bg-blue-500/20 rounded-full blur-[60px] z-[-1]" />
+      <div className="absolute bottom-[-50px] right-[-50px] w-48 h-48 bg-purple-500/20 rounded-full blur-[60px] z-[-1]" />
+
+      <div className="w-full flex justify-between items-center mb-6 z-10">
+        <div className="flex items-center gap-2">
+          <Bot className="w-6 h-6 text-blue-500" />
+          <h1 className="text-xl font-semibold tracking-tight">GodRecruit</h1>
+        </div>
+        <button
+          onClick={openOptions}
+          className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 apple-transition"
+        >
+          <Settings className="w-5 h-5 opacity-70" />
+        </button>
+      </div>
+
+      <div className="flex-1 flex flex-col justify-center items-center w-full z-10">
+        <div className="liquid-glass p-8 w-full flex flex-col items-center gap-4">
+          <div className="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center mb-2">
+            {status === "done" ? (
+              <CheckCircle2 className="w-8 h-8 text-green-500" />
+            ) : (
+              <div className={`w-8 h-8 border-4 border-blue-500/30 border-t-blue-500 rounded-full ${status !== "idle" ? "animate-spin" : ""}`} />
+            )}
+          </div>
+          <h2 className="text-lg font-medium">
+            {status === "idle" && "Ready to Apply"}
+            {status === "parsing" && "Reading ATS Form..."}
+            {status === "generating" && "Gemini Thinking..."}
+            {status === "injecting" && "Injecting Answers..."}
+            {status === "done" && "Application Filled"}
+          </h2>
+          <p className="text-sm opacity-60">
+            {status === "idle" ? "Supported: Lever, Greenhouse, Workday" : "Please don't close the popup"}
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </div>
+
+      <button
+        onClick={handleAutoApply}
+        disabled={status !== "idle" && status !== "done"}
+        className="w-full mt-6 py-4 rounded-2xl liquid-glass border border-white/40 text-[15px] font-medium apple-interactive disabled:opacity-50 disabled:active:scale-100 hover:bg-black/5 dark:hover:bg-white/10 z-10"
+      >
+        {status === "done" ? "Apply Again" : "Auto-Fill Form"}
+      </button>
     </div>
   );
 }

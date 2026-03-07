@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "GodRecruit",
+  "version": "1.0.0",
+  "description": "Premium iOS 26 Liquid Glass AI Auto-Applier",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "options_page": "options.html",
+  "background": {
+    "service_worker": "scripts/background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.greenhouse.io/*",
+        "*://*.lever.co/*",
+        "*://*.myworkdayjobs.com/*"
+      ],
+      "js": ["scripts/content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://*.greenhouse.io/*",
+    "*://*.lever.co/*",
+    "*://*.myworkdayjobs.com/*"
+  ]
+}
