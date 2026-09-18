@@ -9,14 +9,12 @@ export default function Popup() {
   const handleAutoApply = async () => {
     setStatus("parsing");
 
-    // In a real extension, we send a message to the active tab's content script
     if (typeof chrome !== "undefined" && chrome.tabs) {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       if (tab.id) {
         chrome.tabs.sendMessage(tab.id, { action: "START_AUTO_APPLY" });
       }
     } else {
-      // Dummy flow for local testing
       setTimeout(() => setStatus("generating"), 1000);
       setTimeout(() => setStatus("injecting"), 2000);
       setTimeout(() => setStatus("done"), 3000);
@@ -35,7 +33,6 @@ export default function Popup() {
 
   return (
     <div className="w-[340px] h-[480px] p-6 relative overflow-hidden flex flex-col items-center justify-between text-center bg-transparent">
-      {/* Background gradients for liquid glass depth */}
       <div className="absolute inset-0 z-[-1] bg-gradient-to-br from-white/40 to-white/10 dark:from-white/10 dark:to-white/5" />
       <div className="absolute top-[-50px] left-[-50px] w-48 h-48 bg-blue-500/20 rounded-full blur-[60px] z-[-1]" />
       <div className="absolute bottom-[-50px] right-[-50px] w-48 h-48 bg-purple-500/20 rounded-full blur-[60px] z-[-1]" />

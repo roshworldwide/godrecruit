@@ -49,7 +49,6 @@ h6 {
   font-weight: 600;
 }
 
-/* iOS 26 Liquid Glass Utilities */
 .liquid-glass {
   background: linear-gradient(135deg, var(--glass-bg) 0%, rgba(255, 255, 255, 0.1) 100%);
   backdrop-filter: blur(var(--blur-amount)) saturate(var(--saturate-amount));

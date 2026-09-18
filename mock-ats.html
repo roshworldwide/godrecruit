@@ -40,7 +40,6 @@
     </form>
     
     <script>
-        // Track synthetic events to ensure React-bypass would work
         document.getElementById('job-form').addEventListener('input', (e) => {
             console.log('Input event fired on:', e.target.id, 'with value:', e.target.value);
             e.target.setAttribute('data-event-fired', 'true');

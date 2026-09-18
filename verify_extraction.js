@@ -10,7 +10,6 @@ const fs = require('fs');
     const htmlUrl = 'file://' + path.resolve(__dirname, 'mock-ats.html');
     await page.goto(htmlUrl);
 
-    // Read and inject content.js directly into the page
     const contentJsPath = path.resolve(__dirname, 'out/scripts/content.js');
     const contentCode = fs.readFileSync(contentJsPath, 'utf8');
 
@@ -19,13 +18,11 @@ const fs = require('fs');
     console.log("Running Form Extraction Engine...");
 
     const extracted = await page.evaluate(() => {
-        // extractFormInputs is defined in content.js
         return extractFormInputs();
     });
 
     console.log("Parsed Inputs:", extracted);
 
-    // Now test the injector
     const mockAnswers = {
         "first_name": "GodRecruit",
         "last_name": "AI",

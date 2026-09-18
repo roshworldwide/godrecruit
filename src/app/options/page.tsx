@@ -9,7 +9,6 @@ export default function Options() {
     const [supabaseKey, setSupabaseKey] = useState("");
     const [saved, setSaved] = useState(false);
 
-    // Master Resume Form State
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
@@ -23,13 +22,11 @@ export default function Options() {
     useEffect(() => {
         const loadConfig = async () => {
             if (typeof chrome !== "undefined" && chrome.storage) {
-                // Load API keys from sync storage
                 chrome.storage.sync.get(["geminiKey", "supabaseUrl", "supabaseKey"], (result: { [key: string]: string }) => {
                     setGeminiKey(result.geminiKey || "");
                     setSupabaseUrl(result.supabaseUrl || "");
                     setSupabaseKey(result.supabaseKey || "");
                 });
-                // Load master resume from local storage
                 chrome.storage.local.get(["masterResume"], (result: { [key: string]: any }) => {
                     const r = result.masterResume;
                     if (r) {
@@ -95,7 +92,6 @@ export default function Options() {
         <div className="min-h-screen bg-transparent flex justify-center py-12 px-6 relative">
             <div className="absolute inset-0 z-[-2] bg-gradient-to-br from-[#f2f2f7] to-[#e5e5ea] dark:from-[#000000] dark:to-[#111111]" />
 
-            {/* Aurora visual effects */}
             <div className="absolute top-[10%] left-[20%] w-[30vw] h-[30vw] min-w-[300px] min-h-[300px] bg-blue-500/20 rounded-full blur-[100px] z-[-1]" />
             <div className="absolute bottom-[20%] right-[10%] w-[25vw] h-[25vw] min-w-[250px] min-h-[250px] bg-purple-500/20 rounded-full blur-[100px] z-[-1]" />
             <div className="absolute top-[50%] right-[30%] w-[20vw] h-[20vw] min-w-[200px] min-h-[200px] bg-indigo-500/10 rounded-full blur-[80px] z-[-1]" />
@@ -108,7 +104,6 @@ export default function Options() {
                     </div>
                 </div>
 
-                {/* Intelligence Engine */}
                 <section className="liquid-glass p-8 flex flex-col gap-6">
                     <div className="flex items-center gap-2 mb-2 pb-4 border-b border-black/5 dark:border-white/10">
                         <KeySquare className="w-5 h-5 text-gray-500" />
@@ -120,7 +115,6 @@ export default function Options() {
                     </div>
                 </section>
 
-                {/* Supabase Persistence */}
                 <section className="liquid-glass p-8 flex flex-col gap-6">
                     <div className="flex items-center gap-2 mb-2 pb-4 border-b border-black/5 dark:border-white/10">
                         <HardDrive className="w-5 h-5 text-gray-500" />
@@ -138,7 +132,6 @@ export default function Options() {
                     </div>
                 </section>
 
-                {/* Section 1: Personal Info */}
                 <section className="liquid-glass p-8 flex flex-col gap-6">
                     <div className="flex items-center gap-2 mb-2 pb-4 border-b border-black/5 dark:border-white/10">
                         <User className="w-5 h-5 text-gray-500" />
@@ -168,7 +161,6 @@ export default function Options() {
                     </div>
                 </section>
 
-                {/* Section 2: Professional Summary */}
                 <section className="liquid-glass p-8 flex flex-col gap-6">
                     <div className="flex items-center gap-2 mb-2 pb-4 border-b border-black/5 dark:border-white/10">
                         <Briefcase className="w-5 h-5 text-gray-500" />
@@ -185,7 +177,6 @@ export default function Options() {
                     </div>
                 </section>
 
-                {/* Section 3: Experience & Education */}
                 <section className="liquid-glass p-8 flex flex-col gap-6">
                     <div className="flex items-center gap-2 mb-2 pb-4 border-b border-black/5 dark:border-white/10">
                         <GraduationCap className="w-5 h-5 text-gray-500" />
@@ -211,7 +202,6 @@ export default function Options() {
                     </div>
                 </section>
 
-                {/* Section 4: Core Skills */}
                 <section className="liquid-glass p-8 flex flex-col gap-6">
                     <div className="flex items-center gap-2 mb-2 pb-4 border-b border-black/5 dark:border-white/10">
                         <Wrench className="w-5 h-5 text-gray-500" />
@@ -228,7 +218,6 @@ export default function Options() {
                     </div>
                 </section>
 
-                {/* Save Button */}
                 <div className="flex justify-end pt-2 pb-8">
                     <button
                         onClick={handleSave}

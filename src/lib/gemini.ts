@@ -1,6 +1,3 @@
-// The background script will use this to call Gemini
-// The actual API call expects to fetch standard JSON matching the form inputs.
-
 export const generateAnswersFromGemini = async (
     apiKey: string,
     resumeText: string,

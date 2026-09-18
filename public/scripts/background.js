@@ -1,9 +1,5 @@
-// background.js - Service Worker
-
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
-// Polyfill process env for supabase client if needed
-// Supabase needs to be instantiated after loading config from storage
 let supabase = null;
 
 const initSupabase = async (url, key) => {
@@ -12,7 +8,6 @@ const initSupabase = async (url, key) => {
     }
 };
 
-// Gemini generation
 const generateAnswersFromGemini = async (apiKey, resumeText, formQuestions) => {
     const prompt = `
 You are an expert AI recruiting assistant. I have parsed a job application form.
@@ -51,19 +46,15 @@ ${JSON.stringify(formQuestions, null, 2)}
     return JSON.parse(jsonText);
 };
 
-// Message listener
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "FETCH_GEMINI_ANSWERS") {
 
-        // Load config from Chrome Storage
-        // Load API config from sync, master resume from local
         chrome.storage.sync.get(["geminiKey", "supabaseUrl", "supabaseKey"], async (config) => {
             try {
                 if (!config.geminiKey) {
                     throw new Error("Missing Gemini API Key. Please configure it in the Options Dashboard.");
                 }
 
-                // Load the structured master resume from local storage
                 chrome.storage.local.get(["masterResume"], async (localData) => {
                     try {
                         const resume = localData.masterResume;
@@ -71,7 +62,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             throw new Error("Missing Master Resume profile. Please fill it out in the Options Dashboard.");
                         }
 
-                        // Build a rich context string from structured fields
                         const resumeContext = [
                             `Name: ${resume.fullName}`,
                             `Email: ${resume.email}`,
@@ -92,7 +82,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             resume.skills,
                         ].filter(Boolean).join('\n');
 
-                        // Ensure Supabase is connected
                         if (!supabase && config.supabaseUrl && config.supabaseKey) {
                             await initSupabase(config.supabaseUrl, config.supabaseKey);
                         }
@@ -103,7 +92,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             request.payload
                         );
 
-                        // Log to Supabase if connected
                         if (supabase) {
                             await supabase.from('application_logs').insert([{
                                 url: sender.tab?.url,
@@ -126,7 +114,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }
         });
 
-        // Return true to indicate we will send a response asynchronously
         return true;
     }
 });

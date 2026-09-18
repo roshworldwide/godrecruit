@@ -5,16 +5,11 @@ const outDir = path.join(__dirname, '../out');
 const oldNextDir = path.join(outDir, '_next');
 const newNextDir = path.join(outDir, 'next_assets');
 
-// 1. Rename the _next directory specifically
 if (fs.existsSync(oldNextDir)) {
     fs.renameSync(oldNextDir, newNextDir);
     console.log('✅ Renamed _next to next_assets');
 }
 
-// 2. Remove any other generated file/directory in out/ that starts with an underscore.
-// Chrome Extensions strictly forbid any file or folder starting with _.
-// The `__next.*` and `_not-found*` files are mostly useful for Next.js routing, 
-// which is ignored by the Chrome Extension loader since we explicitly point to index.html and options.html.
 if (fs.existsSync(outDir)) {
     const items = fs.readdirSync(outDir);
     for (const item of items) {
@@ -26,7 +21,6 @@ if (fs.existsSync(outDir)) {
     }
 }
 
-// 3. Recursively find all HTML, JS, and CSS files in the out/ directory
 function getFiles(dir, filesList = []) {
     if (!fs.existsSync(dir)) return filesList;
 
@@ -47,17 +41,14 @@ function getFiles(dir, filesList = []) {
 
 const filesToProcess = getFiles(outDir);
 
-// 4. Perform global string replacement
 let updatedCount = 0;
 
 for (const filePath of filesToProcess) {
     const content = fs.readFileSync(filePath, 'utf8');
 
-    // Look for /_next/ and _next/ in paths
-    // Be careful to use global regex flags
     const updatedContent = content
         .replace(/\/_next\//g, '/next_assets/')
-        .replace(/\\"\/_next\//g, '\\"/next_assets/') // JSON escaped strings
+        .replace(/\\"\/_next\//g, '\\"/next_assets/')
         .replace(/_next\//g, 'next_assets/');
 
     if (content !== updatedContent) {
